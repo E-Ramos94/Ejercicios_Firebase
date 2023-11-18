@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "962156442358",
+    "project_id": "listausuarios-1e527",
+    "storage_bucket": "listausuarios-1e527.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:962156442358:android:4690a175a2fd115e9932d7",
+        "android_client_info": {
+          "package_name": "com.enrique.listusers"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBv3axtb6CyNQtwzv2U0oS779-BY2oyWCY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
