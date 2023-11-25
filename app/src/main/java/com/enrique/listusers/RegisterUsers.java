@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,9 +30,13 @@ public class RegisterUsers extends AppCompatActivity {
     EditText Correo, Password, Nombres, Apellidos, Edad;
     Button Registrar;
 
+    DatabaseReference DB_USERS;
     FirebaseAuth auth;
 
     ProgressDialog progressDialog;
+
+    boolean modificar = false;
+    String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,27 @@ public class RegisterUsers extends AppCompatActivity {
         Registrar = findViewById(R.id.Registrar);
 
         auth = FirebaseAuth.getInstance();
+
+        DB_USERS = FirebaseDatabase.getInstance().getReference("USERS");
+
+        Intent intent = getIntent();
+        if (intent.hasExtra("UID")) {
+            modificar = true;
+            uid = intent.getStringExtra("UID");
+            String nombres = intent.getStringExtra("NOMBRES");
+            String apellidos = intent.getStringExtra("APELLIDOS");
+            String correo = intent.getStringExtra("CORREO");
+            String pass = intent.getStringExtra("PASSWORD");
+            String edad = intent.getStringExtra("EDAD");
+
+            Nombres.setText(nombres);
+            Apellidos.setText(apellidos);
+            Correo.setText(correo);
+            Password.setText(pass);
+            Edad.setText(edad);
+        } else {
+            modificar = false;
+        }
 
         Registrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +95,12 @@ public class RegisterUsers extends AppCompatActivity {
                     } else if (pass.length()<6) {
                         Password.setError("Password debe ser mayor o igual a 6 caracteres");
                     } else {
-                        RegistroUsuarios(correo, pass);
+                        if (modificar == true) {
+                            ModificarUsuario(uid);
+                        } else {
+                            RegistroUsuarios(correo, pass);
+                        }
+
                     }
                 }
             }
@@ -128,6 +159,37 @@ public class RegisterUsers extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(RegisterUsers.this, ""+ e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    //METODO PARA ACTUALIZAR USUARIOS
+    private void ModificarUsuario(String uid) {
+        String nombres = Nombres.getText().toString();
+        String apellidos = Apellidos.getText().toString();
+        String correo = Correo.getText().toString();
+        String pass = Password.getText().toString();
+        String edad = Edad.getText().toString();
+        int EdadInt = Integer.parseInt(edad);
+
+        HashMap<String, Object> resultado = new HashMap<>();
+        resultado.put("NOMBRES", nombres);
+        resultado.put("APELLIDOS", apellidos);
+        resultado.put("CORREO", correo);
+        resultado.put("PASSWORD", pass);
+        resultado.put("EDAD", EdadInt);
+
+        DB_USERS.child(uid).updateChildren(resultado)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(RegisterUsers.this, "Datos actualizados", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(RegisterUsers.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

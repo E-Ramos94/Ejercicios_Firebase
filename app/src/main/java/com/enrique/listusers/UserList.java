@@ -51,9 +51,11 @@ public class UserList extends AppCompatActivity {
                 for (DataSnapshot ds: snapshot.getChildren()){
                     Users users = ds.getValue(Users.class);
 
-                    if (!users.getUID().equals(user.getUid())) {
-                        usersList.add(users);
-                    }
+//                    if (!users.getUID().equals(user.getUid())) {
+//                        usersList.add(users);
+//                    }
+
+                    usersList.add(users);
 
                     userAdapter = new UserAdapter(UserList.this, usersList);
                     Userrecycleview.setAdapter(userAdapter);

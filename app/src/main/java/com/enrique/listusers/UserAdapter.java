@@ -1,6 +1,7 @@
 package com.enrique.listusers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyHolder> {
         return users.size();
     }
 
-    public  class  MyHolder extends RecyclerView.ViewHolder {
+    public  class  MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView NombreList, CorreoList;
 
@@ -55,6 +56,28 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyHolder> {
 
             NombreList = itemView.findViewById(R.id.NombreList);
             CorreoList = itemView.findViewById(R.id.CorreoList);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+
+            String uid = users.get(position).getUID();
+            String nombre = users.get(position).getNOMBRES();
+            String apellidos = users.get(position).getAPELLIDOS();
+            String correo = users.get(position).getCORREO();
+            String pass = users.get(position).getPASSWORD();
+            Integer edad = users.get(position).getEDAD();
+
+            Intent intent = new Intent(itemView.getContext(), RegisterUsers.class);
+            intent.putExtra("UID", uid);
+            intent.putExtra("NOMBRES", nombre);
+            intent.putExtra("APELLIDOS", apellidos);
+            intent.putExtra("CORREO", correo);
+            intent.putExtra("PASSWORD", pass);
+            intent.putExtra("EDAD", edad.toString());
+            itemView.getContext().startActivity(intent);
         }
     }
 }
